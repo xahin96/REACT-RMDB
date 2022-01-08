@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { POSTER_SIZE, BACKDROP_SIZE, IMAGE_BAsE_URL, IMAGE_BASE_URL } from '../config';
 //components
 import HeroImage from "./HeroImage";
+import Grid from "./Grid";
+
 //hook
 import { useHomeFetch } from  '../hooks/useHomeFetch';
 //image
@@ -21,8 +23,12 @@ const Home = () => {
                     title={state.results[0].original_title}
                     text={state.results[0].overview}
                 />
-                : null
-            }
+                : null}
+            <Grid header='Popular Movies'>
+                {state.results.map(movie => (
+                    <div key={movie.id}>{movie.title}</div>
+                ))}
+            </Grid>
         </>
     )
 }
