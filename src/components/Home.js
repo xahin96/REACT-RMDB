@@ -4,6 +4,10 @@ import { POSTER_SIZE, BACKDROP_SIZE, IMAGE_BAsE_URL, IMAGE_BASE_URL } from '../c
 //components
 import HeroImage from "./HeroImage";
 import Grid from "./Grid";
+import Thumb from "./Thumb";
+import Spinner from "./Spinner";
+import SearchBar from "./SearchBar"
+import Button from "./Button";
 
 //hook
 import { useHomeFetch } from  '../hooks/useHomeFetch';
@@ -12,8 +16,16 @@ import NoImage from '../images/no_image.jpg';
 
 const Home = () => {
     
-    const { state, loading, error } = useHomeFetch();
-    console.log(state);
+    const { 
+        state, 
+        loading, 
+        error, 
+        searchTerm, 
+        setSearchTerm, 
+        setIsLoadingMore 
+    } = useHomeFetch();
+
+    if(error) return <div>Something went wrong...</div> 
 
     return (
         <>
@@ -24,11 +36,23 @@ const Home = () => {
                     text={state.results[0].overview}
                 />
                 : null}
-            <Grid header='Popular Movies'>
+            <SearchBar setSearchTerm={setSearchTerm} />
+            <Grid header={searchTerm ? 'Search Result' : 'Popular Movies'}>
                 {state.results.map(movie => (
-                    <div key={movie.id}>{movie.title}</div>
+                    <Thumb
+                        key={movie.id}
+                        clickable
+                        image={
+                            movie.poster_path 
+                                ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
+                                : NoImage
+                        }/>
                 ))}
             </Grid>
+            {loading && <Spinner />}
+            {state.page < state.total_pages && !loading && (
+                <Button text='Load More' callback={() => setIsLoadingMore(true)}/>
+            )}
         </>
     )
 }
