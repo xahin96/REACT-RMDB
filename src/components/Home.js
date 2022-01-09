@@ -46,7 +46,9 @@ const Home = () => {
                             movie.poster_path 
                                 ? IMAGE_BASE_URL + POSTER_SIZE + movie.poster_path
                                 : NoImage
-                        }/>
+                        }
+                        movieId={movie.id}
+                        />
                 ))}
             </Grid>
             {loading && <Spinner />}
